@@ -1,7 +1,49 @@
 import streamlit as st
 import pdfplumber
 from openai import OpenAI
-client = OpenAI()
+
+st.set_page_config(
+    page_title="CV Adapté à l’Offre",
+    page_icon="📄",
+    layout="centered"
+)
+
+# -------------------------
+# Header principal
+# -------------------------
+
+st.markdown("""
+    <style>
+        .main-title {
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #555;
+        }
+        .beta {
+            font-size: 14px;
+            color: orange;
+        }
+        .card {
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #f7f9fc;
+            margin-bottom: 20px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown('<p class="main-title">CV Adapté à l’Offre d’Emploi</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">Optimise ton CV, ta lettre et ton mail en quelques secondes.</p>', unsafe_allow_html=True)
+st.markdown('<p class="beta">🚀 Version bêta – usage limité gratuit</p>', unsafe_allow_html=True)
+
+st.markdown("---")
+
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+
+
 
 # -----------------------------
 # Initialisation du session_state
@@ -441,10 +483,16 @@ elif st.session_state.cv_status == "processing":
     st.button("Génération en cours…", disabled=True)
 
 elif st.session_state.cv_status == "idle":
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📄 CV adapté à l’offre")
+
     if st.button("Adapter mon CV", key="gen_cv"):
         st.session_state.cv_status = "processing"
         st.session_state.cv_result = ""
         st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.cv_status == "processing" and st.session_state.cv_result == "":
     with st.spinner("Génération du CV adapté..."):
@@ -472,10 +520,16 @@ elif st.session_state.lm_status == "processing":
     st.button("Génération en cours…", disabled=True)
 
 elif st.session_state.lm_status == "idle":
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("✉️ Lettre de motivation")
+
     if st.button("Générer la lettre de motivation", key="gen_lm"):
         st.session_state.lm_status = "processing"
         st.session_state.lm_result = ""
         st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.lm_status == "processing" and st.session_state.lm_result == "":
     with st.spinner("Génération de la lettre..."):
@@ -503,10 +557,16 @@ elif st.session_state.mail_status == "processing":
     st.button("Génération en cours…", disabled=True)
 
 elif st.session_state.mail_status == "idle":
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📧 Mail de candidature")
+
     if st.button("Générer le mail", key="gen_mail"):
         st.session_state.mail_status = "processing"
         st.session_state.mail_result = ""
         st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.mail_status == "processing" and st.session_state.mail_result == "":
     with st.spinner("Génération du mail..."):
@@ -518,3 +578,11 @@ if st.session_state.mail_status == "processing" and st.session_state.mail_result
         st.session_state.mail_result = res
         st.session_state.mail_status = "done"
         st.rerun()
+
+        st.markdown("---")
+
+col1, col2, col3 = st.columns([1,2,1])
+
+with col2:
+    st.image("maison_logo.jpeg", width=120)
+    st.caption("© Katsux Group – Tous droits réservés")
