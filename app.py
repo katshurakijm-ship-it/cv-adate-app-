@@ -1,5 +1,6 @@
 import streamlit as st
 import pdfplumber
+import os
 from openai import OpenAI
 
 st.set_page_config(
