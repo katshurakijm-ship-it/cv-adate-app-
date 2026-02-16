@@ -9,31 +9,70 @@ st.set_page_config(
     layout="centered"
 )
 
-# -------------------------
-# Header principal
-# -------------------------
+# =========================
+# HEADER PROPRE
+# =========================
 
 st.markdown("""
-    <style>
-        .main-title {
-            font-size: 36px;
-            font-weight: 700;
-        }
-        .subtitle {
-            font-size: 18px;
-            color: #555;
-        }
-        .beta {
-            font-size: 14px;
-            color: orange;
-        }
-        .card {
-            padding: 20px;
-            border-radius: 12px;
-            background-color: #f7f9fc;
-            margin-bottom: 20px;
-        }
-    </style>
+<style>
+
+/* Fond général */
+body {
+    background-color: #f9fafc;
+}
+
+/* Container principal plus propre */
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Titres */
+.main-title {
+    font-size: 34px;
+    font-weight: 700;
+    color: #111827;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.beta {
+    font-size: 14px;
+    color: #f59e0b;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Boutons */
+.stButton > button {
+    background-color: #2563eb;
+    color: white;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    border: none;
+}
+
+.stButton > button:hover {
+    background-color: #1e40af;
+}
+
+/* Séparateurs */
+hr {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Supprimer footer Streamlit */
+footer {visibility: hidden;}
+
+</style>
 """, unsafe_allow_html=True)
 
 st.markdown('<p class="main-title">CV Adapté à l’Offre d’Emploi</p>', unsafe_allow_html=True)
@@ -486,7 +525,6 @@ elif st.session_state.cv_status == "processing":
 elif st.session_state.cv_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📄 CV adapté à l’offre")
 
     if st.button("Adapter mon CV", key="gen_cv"):
         st.session_state.cv_status = "processing"
@@ -523,7 +561,6 @@ elif st.session_state.lm_status == "processing":
 elif st.session_state.lm_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("✉️ Lettre de motivation")
 
     if st.button("Générer la lettre de motivation", key="gen_lm"):
         st.session_state.lm_status = "processing"
@@ -560,7 +597,6 @@ elif st.session_state.mail_status == "processing":
 elif st.session_state.mail_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📧 Mail de candidature")
 
     if st.button("Générer le mail", key="gen_mail"):
         st.session_state.mail_status = "processing"
@@ -580,10 +616,9 @@ if st.session_state.mail_status == "processing" and st.session_state.mail_result
         st.session_state.mail_status = "done"
         st.rerun()
 
-        st.markdown("---")
+st.markdown("---")
 
-col1, col2, col3 = st.columns([1,2,1])
-
-with col2:
-    st.image("maison_logo.jpeg", width=120)
-    st.caption("© Katsux Group – Tous droits réservés")
+st.markdown(
+    "<p style='text-align:center; color:#6b7280; font-size:14px;'>©️ Katsux Group – Tous droits réservés</p>",
+    unsafe_allow_html=True
+)
