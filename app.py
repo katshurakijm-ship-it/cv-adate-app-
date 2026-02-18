@@ -497,16 +497,15 @@ if st.session_state.step >= 2 and "cv_text" in st.session_state:
             st.success("Analyse terminée ✅")
             st.markdown(analysis)
 
-# Extraire le pourcentage depuis le texte d'analyse
-import re
+            # Extraire le pourcentage depuis le texte d'analyse
+            import re
 
-match = re.search(r"(\d+)%", analysis)
-if match:
-    score = int(match.group(1))
-    st.session_state.compatibility_score = score
+            match = re.search(r"(\d+)%", analysis)
+            if match:
+                score = int(match.group(1))
+                st.session_state.compatibility_score = score
 else:
     st.session_state.compatibility_score = 0
-
 # ----------------------------
 # ÉTAPE 4 — MODE TEST GRATUIT
 # ----------------------------
