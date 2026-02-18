@@ -500,7 +500,7 @@ if st.session_state.step >= 2 and "cv_text" in st.session_state:
             # Extraire le pourcentage depuis le texte d'analyse
             import re
 
-            match = re.search(r"(\d+)%", analysis)
+            match = re.search(r"(\d+)\s*%", analysis)
             if match:
                 score = int(match.group(1))
                 st.session_state.compatibility_score = score
