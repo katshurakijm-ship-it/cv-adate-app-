@@ -497,6 +497,16 @@ if st.session_state.step >= 2 and "cv_text" in st.session_state:
             st.success("Analyse terminée ✅")
             st.markdown(analysis)
 
+# Extraire le pourcentage depuis le texte d'analyse
+import re
+
+match = re.search(r"(\d+)%", analysis)
+if match:
+    score = int(match.group(1))
+    st.session_state.compatibility_score = score
+else:
+    st.session_state.compatibility_score = 0
+
 # ----------------------------
 # ÉTAPE 4 — MODE TEST GRATUIT
 # ----------------------------
@@ -526,10 +536,24 @@ elif st.session_state.cv_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    if st.button("Adapter mon CV", key="gen_cv"):
-        st.session_state.cv_status = "processing"
-        st.session_state.cv_result = ""
-        st.rerun()
+    # Vérifier le score avant d’autoriser la génération
+    if st.session_state.get("compatibility_score", 100) < 50:
+
+        st.error(
+            "❗ Votre CV présente une compatibilité inférieure à 50% avec cette offre.\n\n"
+            "Pour des raisons d’intégrité professionnelle, nous ne pouvons pas modifier "
+            "votre CV lorsque l’écart est trop important.\n\n"
+            "Nous ne pouvons ni inventer ni ajouter des compétences absentes de votre profil."
+        )
+
+        st.button("Adapter mon CV", disabled=True)
+
+    else:
+
+        if st.button("Adapter mon CV", key="gen_cv"):
+            st.session_state.cv_status = "processing"
+            st.session_state.cv_result = ""
+            st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -558,14 +582,27 @@ if st.session_state.lm_status == "done":
 elif st.session_state.lm_status == "processing":
     st.button("Génération en cours…", disabled=True)
 
-elif st.session_state.lm_status == "idle":
+elif st.session_state.letter_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    if st.button("Générer la lettre de motivation", key="gen_lm"):
-        st.session_state.lm_status = "processing"
-        st.session_state.lm_result = ""
-        st.rerun()
+    if st.session_state.get("compatibility_score", 100) < 50:
+
+        st.error(
+            "❗ Votre CV présente une compatibilité inférieure à 50% avec cette offre.\n\n"
+            "Pour des raisons d’intégrité professionnelle, nous ne pouvons pas modifier "
+            "votre candidature lorsque l’écart est trop important.\n\n"
+            "Nous ne pouvons ni inventer ni ajouter des compétences absentes de votre profil."
+        )
+
+        st.button("Générer la lettre", disabled=True)
+
+    else:
+
+        if st.button("Générer la lettre", key="gen_letter"):
+            st.session_state.letter_status = "processing"
+            st.session_state.letter_result = ""
+            st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -598,10 +635,16 @@ elif st.session_state.mail_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    if st.button("Générer le mail", key="gen_mail"):
-        st.session_state.mail_status = "processing"
-        st.session_state.mail_result = ""
-        st.rerun()
+    if st.session_state.get("compatibility_score", 100) < 50:
+
+        st.button("Générer le mail", disabled=True)
+
+    else:
+
+        if st.button("Générer le mail", key="gen_mail"):
+            st.session_state.mail_status = "processing"
+            st.session_state.mail_result = ""
+            st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
