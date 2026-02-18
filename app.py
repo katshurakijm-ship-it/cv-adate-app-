@@ -23,7 +23,7 @@ body {
 
 /* Container principal plus propre */
 .block-container {
-    padding-top: 2rem;
+    padding-top: 4rem;
     padding-bottom: 2rem;
 }
 
@@ -401,14 +401,27 @@ CV :
 {cv_text}
 
 MISSION :
-Rédiger UNE LETTRE DE MOTIVATION professionnelle,
-avec obligatoirement :
+
+Rédiger UNE LETTRE DE MOTIVATION professionnelle, personnalisée et crédible.
+
+OBLIGATIONS STRICTES :
+
+1. Utiliser des éléments précis du CV (compétences, expériences, réalisations).
+2. Faire explicitement le lien entre au moins 2 exigences de l’offre et le profil du candidat.
+3. Mentionner des exemples concrets (missions réalisées, résultats obtenus, outils maîtrisés).
+4. Interdire toute phrase générique ou vague (ex: "je suis motivé", "je suis dynamique", etc.).
+5. Ne jamais inventer de compétences absentes du CV.
+
+Structure obligatoire :
 - En-tête
 - Objet
-- Introduction
-- Corps structuré
-- Conclusion
-- Formule de politesse et signature
+- Introduction personnalisée
+- Corps structuré en 2 à 3 paragraphes argumentés
+- Conclusion cohérente
+- Formule de politesse professionnelle et signature
+
+Le ton doit être professionnel, naturel et crédible.
+La lettre doit sembler écrite spécifiquement pour cette offre.
 
 Fournis uniquement la lettre finale.
 """
@@ -671,7 +684,7 @@ if st.session_state.mail_status == "processing" and st.session_state.mail_result
 st.markdown("---")
 
 st.markdown(
-    "<p style='text-align:center; color:#6b7280; font-size:14px;'>©️ Katsux Group – Tous droits réservés</p>",
+    "<p style='text-align:center; color:#6b7280; font-size:14px;'>©️ Katshux Group – Tous droits réservés</p>",
     unsafe_allow_html=True
 )
 # test commit
