@@ -595,14 +595,14 @@ if "compatibility_score" in st.session_state and st.session_state.compatibility_
 
         st.button("Générer la lettre", disabled=True)
 
-    else:
+else:
 
-        if st.button("Générer la lettre", key="gen_letter"):
-            st.session_state.lm_status = "processing"
-            st.session_state.lm_result = ""
-            st.rerun()
+    if st.button("Générer la lettre", key="gen_letter"):
+       st.session_state.lm_status = "processing"
+       st.session_state.lm_result = ""
+       st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.lm_status == "processing" and st.session_state.lm_result == "":
     with st.spinner("Génération de la lettre..."):
@@ -663,4 +663,4 @@ st.markdown(
     "<p style='text-align:center; color:#6b7280; font-size:14px;'>©️ Katsux Group – Tous droits réservés</p>",
     unsafe_allow_html=True
 )
-# test commit
+# test commit 
