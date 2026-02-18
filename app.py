@@ -505,7 +505,7 @@ if st.session_state.step >= 2 and "cv_text" in st.session_state:
                 score = int(match.group(1))
                 st.session_state.compatibility_score = score
 else:
-    st.session_state.compatibility_score = 0
+    st.session_state.compatibility_score = None
 # ----------------------------
 # ÉTAPE 4 — MODE TEST GRATUIT
 # ----------------------------
@@ -536,8 +536,11 @@ elif st.session_state.cv_status == "idle":
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
     # Vérifier le score avant d’autoriser la génération
-    if "compatibility_score" in st.session_state and st.session_state.compatibility_score < 50:
-
+    if (
+        "compatibility_score" in st.session_state
+        and st.session_state.compatibility_score is not None
+        and st.session_state.compatibility_score < 50
+    ):
         st.error(
             "❗ Votre CV présente une compatibilité inférieure à 50% avec cette offre.\n\n"
             "Pour des raisons d’intégrité professionnelle, nous ne pouvons pas modifier "
@@ -585,7 +588,11 @@ elif st.session_state.lm_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-if "compatibility_score" in st.session_state and st.session_state.compatibility_score < 50:
+if (
+    "compatibility_score" in st.session_state
+    and st.session_state.compatibility_score is not None
+    and st.session_state.compatibility_score < 50
+):
         st.error(
             "❗ Votre CV présente une compatibilité inférieure à 50% avec cette offre.\n\n"
             "Pour des raisons d’intégrité professionnelle, nous ne pouvons pas modifier "
@@ -633,7 +640,11 @@ elif st.session_state.mail_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    if "compatibility_score" in st.session_state and st.session_state.compatibility_score < 50:
+    if (
+        "compatibility_score" in st.session_state
+        and st.session_state.compatibility_score is not None
+        and st.session_state.compatibility_score < 50
+    ):
 
         st.button("Générer le mail", disabled=True)
 
@@ -663,4 +674,4 @@ st.markdown(
     "<p style='text-align:center; color:#6b7280; font-size:14px;'>©️ Katsux Group – Tous droits réservés</p>",
     unsafe_allow_html=True
 )
-# test commit 
+# test commit
