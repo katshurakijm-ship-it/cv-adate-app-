@@ -536,7 +536,7 @@ elif st.session_state.cv_status == "idle":
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
     # Vérifier le score avant d’autoriser la génération
-    if st.session_state.get("compatibility_score", 100) < 50:
+    if "compatibility_score" in st.session_state and st.session_state.compatibility_score < 50:
 
         st.error(
             "❗ Votre CV présente une compatibilité inférieure à 50% avec cette offre.\n\n"
@@ -581,12 +581,11 @@ if st.session_state.lm_status == "done":
 elif st.session_state.lm_status == "processing":
     st.button("Génération en cours…", disabled=True)
 
-elif st.session_state.letter_status == "idle":
+elif st.session_state.lm_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    if st.session_state.get("compatibility_score", 100) < 50:
-
+if "compatibility_score" in st.session_state and st.session_state.compatibility_score < 50:
         st.error(
             "❗ Votre CV présente une compatibilité inférieure à 50% avec cette offre.\n\n"
             "Pour des raisons d’intégrité professionnelle, nous ne pouvons pas modifier "
@@ -599,8 +598,8 @@ elif st.session_state.letter_status == "idle":
     else:
 
         if st.button("Générer la lettre", key="gen_letter"):
-            st.session_state.letter_status = "processing"
-            st.session_state.letter_result = ""
+            st.session_state.lm_status = "processing"
+            st.session_state.lm_result = ""
             st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
@@ -634,7 +633,7 @@ elif st.session_state.mail_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    if st.session_state.get("compatibility_score", 100) < 50:
+    if "compatibility_score" in st.session_state and st.session_state.compatibility_score < 50:
 
         st.button("Générer le mail", disabled=True)
 
@@ -664,3 +663,4 @@ st.markdown(
     "<p style='text-align:center; color:#6b7280; font-size:14px;'>©️ Katsux Group – Tous droits réservés</p>",
     unsafe_allow_html=True
 )
+# test commit
