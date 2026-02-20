@@ -384,6 +384,12 @@ en suivant strictement cette structure :
 - Autres informations pertinentes
 
 Fournis uniquement le CV adapté final.
+
+Important :
+- N'utilise jamais d’astérisques (**), de symboles Markdown, ni de mise en forme type Markdown.
+- N'utilise pas de caractères comme **, ##, ---, ou autres symboles décoratifs.
+- Le document doit être en texte brut professionnel.
+- Les titres doivent être écrits simplement en MAJUSCULES ou avec un saut de ligne, sans aucun symbole.
 """
 
     response = client.chat.completions.create(
@@ -440,6 +446,12 @@ Le ton doit être professionnel, naturel et crédible.
 La lettre doit sembler écrite spécifiquement pour cette offre.
 
 Fournis uniquement la lettre finale.
+
+Important :
+- N'utilise jamais d’astérisques (**), de symboles Markdown, ni de mise en forme type Markdown.
+- N'utilise pas de caractères comme **, ##, ---, ou autres symboles décoratifs.
+- Le document doit être en texte brut professionnel.
+- Les titres doivent être écrits simplement en MAJUSCULES ou avec un saut de ligne, sans aucun symbole.
 """
 
     response = client.chat.completions.create(
@@ -478,6 +490,12 @@ avec :
 - Signature
 
 Fournis uniquement le mail final.
+
+Important :
+- N'utilise jamais d’astérisques (**), de symboles Markdown, ni de mise en forme type Markdown.
+- N'utilise pas de caractères comme **, ##, ---, ou autres symboles décoratifs.
+- Le document doit être en texte brut professionnel.
+- Les titres doivent être écrits simplement en MAJUSCULES ou avec un saut de ligne, sans aucun symbole.
 """
 
     response = client.chat.completions.create(
@@ -569,14 +587,15 @@ col1, col2, col3 = st.columns([1, 1, 4])  # boutons plus petits
 
 def _reset_outputs_for_regen():
     # On force UNIQUEMENT la régénération des documents (pas l’analyse)
-    st.session_state.cv_status = "processing"
-    st.session_state.cv_result = ""
-
-    st.session_state.lm_status = "processing"
-    st.session_state.lm_result = ""
-
-    st.session_state.mail_status = "processing"
-    st.session_state.mail_result = ""
+    if st.session_state.get("cv_status") == "done":
+        st.session_state.cv_status = "processing"
+        st.session_state.cv_result = ""
+    if st.session_state.get("lm_status") == "done":
+        st.session_state.lm_status = "processing"
+        st.session_state.lm_result = ""
+    if st.session_state("mail_status") == "done":
+        st.session_state.mail_status = "processing"
+        st.session_state.mail_result = ""
 
 with col1:
     clicked_fr = st.button("Français", key="lang_fr", use_container_width=True, type="secondary")
