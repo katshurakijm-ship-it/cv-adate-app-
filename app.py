@@ -560,46 +560,36 @@ st.markdown("### 🌍 Langue des documents générés :")
 if "output_language" not in st.session_state:
     st.session_state.output_language = "Français"
 
-colL1, colL2 = st.columns(2)
+st.caption(
+    f"Langue actuelle : {st.session_state.output_language} "
+    "(cela affecte uniquement les documents générés)"
+)
 
-with colL1:
-    if st.button("🇫🇷 Français", disabled=(st.session_state.output_language == "Français")):
-        # Si on change de langue, on force la régénération des docs déjà générés
+col1, col2, col3 = st.columns([1, 1, 4])  # boutons plus petits
+
+def _reset_outputs_for_regen():
+    # On force UNIQUEMENT la régénération des documents (pas l’analyse)
+    st.session_state.cv_status = "processing"
+    st.session_state.cv_result = ""
+
+    st.session_state.lm_status = "processing"
+    st.session_state.lm_result = ""
+
+    st.session_state.mail_status = "processing"
+    st.session_state.mail_result = ""
+
+with col1:
+    clicked_fr = st.button("Français", key="lang_fr", use_container_width=True, type="secondary")
+    if clicked_fr and st.session_state.output_language != "Français":
         st.session_state.output_language = "Français"
+        _reset_outputs_for_regen()
 
-        if st.session_state.get("cv_status") == "done":
-            st.session_state.cv_status = "processing"
-            st.session_state.cv_result = ""
-
-        if st.session_state.get("lm_status") == "done":
-            st.session_state.lm_status = "processing"
-            st.session_state.lm_result = ""
-
-        if st.session_state.get("mail_status") == "done":
-            st.session_state.mail_status = "processing"
-            st.session_state.mail_result = ""
-
-        st.rerun()
-
-with colL2:
-    if st.button("🇬🇧 Anglais", disabled=(st.session_state.output_language == "Anglais")):
+with col2:
+    clicked_en = st.button("Anglais", key="lang_en", use_container_width=True, type="secondary")
+    if clicked_en and st.session_state.output_language != "Anglais":
         st.session_state.output_language = "Anglais"
+        _reset_outputs_for_regen()
 
-        if st.session_state.get("cv_status") == "done":
-            st.session_state.cv_status = "processing"
-            st.session_state.cv_result = ""
-
-        if st.session_state.get("lm_status") == "done":
-            st.session_state.lm_status = "processing"
-            st.session_state.lm_result = ""
-
-        if st.session_state.get("mail_status") == "done":
-            st.session_state.mail_status = "processing"
-            st.session_state.mail_result = ""
-
-        st.rerun()
-
-# On garde ton nom de variable pour ne rien casser plus bas :
 output_language = st.session_state.output_language
 
 # =========================================================
@@ -646,7 +636,6 @@ elif st.session_state.cv_status == "idle":
         if st.button("Adapter mon CV", key="gen_cv"):
             st.session_state.cv_status = "processing"
             st.session_state.cv_result = ""
-            st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -700,14 +689,13 @@ elif st.session_state.lm_status == "idle":
 
         st.button("Générer la lettre", disabled=True)
 
-else:
+    else:
 
-    if st.button("Générer la lettre", key="gen_letter"):
-       st.session_state.lm_status = "processing"
-       st.session_state.lm_result = ""
-       st.rerun()
+        if st.button("Générer la lettre", key="gen_letter"):
+            st.session_state.lm_status = "processing"
+            st.session_state.lm_result = ""
 
-st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.lm_status == "processing" and st.session_state.lm_result == "":
     with st.spinner("Génération de la lettre..."):
@@ -758,7 +746,6 @@ elif st.session_state.mail_status == "idle":
         if st.button("Générer le mail", key="gen_mail"):
             st.session_state.mail_status = "processing"
             st.session_state.mail_result = ""
-            st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -779,4 +766,4 @@ st.markdown(
     "<p style='text-align:center; color:#6b7280; font-size:14px;'>©️ Katshux Group – Tous droits réservés</p>",
     unsafe_allow_html=True
 )
-# test commit
+# test commit 
