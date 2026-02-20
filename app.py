@@ -593,7 +593,7 @@ def _reset_outputs_for_regen():
     if st.session_state.get("lm_status") == "done":
         st.session_state.lm_status = "processing"
         st.session_state.lm_result = ""
-    if st.session_state("mail_status") == "done":
+    if st.session_state.get("mail_status") == "done":
         st.session_state.mail_status = "processing"
         st.session_state.mail_result = ""
 
