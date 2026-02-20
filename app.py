@@ -291,7 +291,15 @@ Explique en une ou deux phrases comment ce score a été estimé.
 
 4. Clarté du CV – zones floues ou à risque
 
-5. Recommandations prioritaires (3 à 5 max)
+5. Opportunité d'optimisation premium : 
+Cette section doit :
+- Suggérer qu’une optimisation stratégique du CV est possible
+- Mentionner l’amélioration du score ATS et de l’alignement avec l’offre
+- Ne donner aucun conseil concret, aucun exemple, ni mot-clé précis
+- Créer un sentiment de potentiel inexploité
+- Inciter subtilement à activer le mode Premium
+
+Le ton doit être professionnel, crédible et orienté performance.
 
 Ne rajoute aucune section.
 Ne conclus pas avec une phrase commerciale.
@@ -320,7 +328,15 @@ STRUCTURE OBLIGATOIRE DE TA RÉPONSE :
 
 4. Clarté du CV – zones floues ou à risque
 
-5. Recommandations prioritaires (3 à 5 maximum)
+5. Opportunité d'optimisation premium :
+Cette section doit :
+- Suggérer qu’une optimisation stratégique du CV est possible
+- Mentionner l’amélioration du score ATS et de l’alignement avec l’offre
+- Ne donner aucun conseil concret, aucun exemple, ni mot-clé précis
+- Créer un sentiment de potentiel inexploité
+- Inciter subtilement à activer le mode Premium
+
+Le ton doit être professionnel, crédible et orienté performance.
 
 Ne rajoute aucune section.
 Ne conclus pas avec une phrase commerciale.
@@ -486,14 +502,34 @@ Fournis uniquement le mail final.
 # ÉTAPE 3 — ANALYSE GRATUITE (IA)
 # ----------------------------
 if st.session_state.step >= 2 and "cv_text" in st.session_state:
-    st.markdown("## 🔹 Étape 3 — Analyse gratuite CV ↔ Offre")
+
+    st.markdown("## 🔹 Étape 3 — Analyse gratuite CV ↔️ Offre")
 
     st.write(
         "Cette analyse est réalisée par une intelligence artificielle, "
         "en se basant uniquement sur ton CV et sur l’offre d’emploi fournie."
     )
 
-    if st.button("🔍 Lancer l’analyse"):
+    # Initialisation si nécessaire
+    if "analysis_status" not in st.session_state:
+        st.session_state.analysis_status = "idle"
+        st.session_state.analysis_result = ""
+
+    if st.session_state.analysis_status == "done":
+        st.success("Analyse terminée ✅")
+        st.markdown(st.session_state.analysis_result)
+
+    elif st.session_state.analysis_status == "processing":
+        st.button("Analyse en cours…", disabled=True)
+
+    elif st.session_state.analysis_status == "idle":
+        if st.button("🔍 Lancer l’analyse", key="gen_analysis"):
+            st.session_state.analysis_status = "processing"
+            st.session_state.analysis_result = ""
+            st.rerun()
+
+    # Lancer génération si processing
+    if st.session_state.analysis_status == "processing" and st.session_state.analysis_result == "":
         with st.spinner("Analyse en cours..."):
             analysis = generate_ai_analysis(
                 st.session_state.job_offer_text,
@@ -501,35 +537,70 @@ if st.session_state.step >= 2 and "cv_text" in st.session_state:
             )
 
         if analysis is None:
-            st.warning(
-                "🔒 L’analyse intelligente par IA n’est pas encore activée.\n\n"
-                "👉 L’outil est prêt, il manque simplement la clé OpenAI.\n"
-                "👉 Tu pourras activer cette fonctionnalité plus tard sans modifier le code."
-            )
+            st.warning("Clé OpenAI manquante.")
+            st.session_state.analysis_status = "idle"
         else:
-            st.success("Analyse terminée ✅")
-            st.markdown(analysis)
+            st.session_state.analysis_result = analysis
+            st.session_state.analysis_status = "done"
 
-            # Extraire le pourcentage depuis le texte d'analyse
+            # Extraire score
             import re
-
             match = re.search(r"(\d+)\s*%", analysis)
             if match:
-                score = int(match.group(1))
-                st.session_state.compatibility_score = score
-else:
-    st.session_state.compatibility_score = None
+                st.session_state.compatibility_score = int(match.group(1))
+
+        st.rerun()
 # ----------------------------
 # ÉTAPE 4 — MODE TEST GRATUIT
 # ----------------------------
 
-st.markdown("## 🔓 Étape 4 — Fonctions avancées (Mode test gratuit)")
+# --- Langue des documents générés (sorties uniquement) ---
+st.markdown("### 🌍 Langue des documents générés :")
 
-output_language = st.radio(
-    "Langue des documents générés :",
-    ["Français", "Anglais"],
-    horizontal=True
-)
+if "output_language" not in st.session_state:
+    st.session_state.output_language = "Français"
+
+colL1, colL2 = st.columns(2)
+
+with colL1:
+    if st.button("🇫🇷 Français", disabled=(st.session_state.output_language == "Français")):
+        # Si on change de langue, on force la régénération des docs déjà générés
+        st.session_state.output_language = "Français"
+
+        if st.session_state.get("cv_status") == "done":
+            st.session_state.cv_status = "processing"
+            st.session_state.cv_result = ""
+
+        if st.session_state.get("lm_status") == "done":
+            st.session_state.lm_status = "processing"
+            st.session_state.lm_result = ""
+
+        if st.session_state.get("mail_status") == "done":
+            st.session_state.mail_status = "processing"
+            st.session_state.mail_result = ""
+
+        st.rerun()
+
+with colL2:
+    if st.button("🇬🇧 Anglais", disabled=(st.session_state.output_language == "Anglais")):
+        st.session_state.output_language = "Anglais"
+
+        if st.session_state.get("cv_status") == "done":
+            st.session_state.cv_status = "processing"
+            st.session_state.cv_result = ""
+
+        if st.session_state.get("lm_status") == "done":
+            st.session_state.lm_status = "processing"
+            st.session_state.lm_result = ""
+
+        if st.session_state.get("mail_status") == "done":
+            st.session_state.mail_status = "processing"
+            st.session_state.mail_result = ""
+
+        st.rerun()
+
+# On garde ton nom de variable pour ne rien casser plus bas :
+output_language = st.session_state.output_language
 
 # =========================================================
 # 📄 CV ADAPTÉ
@@ -540,6 +611,13 @@ st.markdown("### 📄 CV adapté à l’offre")
 if st.session_state.cv_status == "done":
     st.success("CV adapté généré ✅")
     st.text_area("Contenu du CV adapté", st.session_state.cv_result, height=450)
+
+    st.download_button(
+    "⬇️ Télécharger le CV adapté",
+    st.session_state.cv_result,
+    file_name="CV_adapte.txt",
+    mime="text/plain"
+    )
 
 elif st.session_state.cv_status == "processing":
     st.button("Génération en cours…", disabled=True)
@@ -594,6 +672,13 @@ if st.session_state.lm_status == "done":
     st.success("Lettre générée ✅")
     st.text_area("Lettre de motivation", st.session_state.lm_result, height=400)
 
+    st.download_button(
+    "⬇️ Télécharger la lettre",
+    st.session_state.lm_result,
+    file_name="Lettre_de_motivation.txt",
+    mime="text/plain"
+    )
+
 elif st.session_state.lm_status == "processing":
     st.button("Génération en cours…", disabled=True)
 
@@ -601,11 +686,11 @@ elif st.session_state.lm_status == "idle":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-if (
-    "compatibility_score" in st.session_state
-    and st.session_state.compatibility_score is not None
-    and st.session_state.compatibility_score < 50
-):
+    if (
+        "compatibility_score" in st.session_state
+        and st.session_state.compatibility_score is not None
+        and st.session_state.compatibility_score < 50
+    ):
         st.error(
             "❗ Votre CV présente une compatibilité inférieure à 50% avec cette offre.\n\n"
             "Pour des raisons d’intégrité professionnelle, nous ne pouvons pas modifier "
@@ -645,6 +730,13 @@ st.markdown("### 📧 Mail de candidature")
 if st.session_state.mail_status == "done":
     st.success("Mail généré ✅")
     st.text_area("Mail de candidature", st.session_state.mail_result, height=300)
+
+    st.download_button(
+    "⬇️ Télécharger le mail",
+    st.session_state.mail_result,
+    file_name="Mail_candidature.txt",
+    mime="text/plain"
+    )
 
 elif st.session_state.mail_status == "processing":
     st.button("Génération en cours…", disabled=True)
